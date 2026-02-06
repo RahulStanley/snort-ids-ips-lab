@@ -1,0 +1,50 @@
+# $Id: local.rules,v 1.11 2004/07/23 20:15:44 bmc Exp $
+# ----------------
+# LOCAL RULES
+# ----------------
+# This file intentionally does not come with signatures.  Put your local
+# additions here.
+
+#ICMP Packets
+alert icmp any any -> any any (msg:"ICMP<-------> Ping<-------> Detected!!!"; itype:8; sid:1000001; rev:1;)
+#Brute Force
+alert tcp any any -> any 22 (msg:"SSH<------> Brute<-------> Force<------> Attempt<------> ATTACKED!!!"; flags:S; threshold:type threshold, track by_src, count 5, seconds 60; sid:1000002; rev:1;)
+#FTP Login Attempts
+alert tcp any any -> any 21 (msg:"FTP Login Attempt"; content:"USER"; nocase; sid:2000004; rev:1;)
+#Nmap Scan Detection
+##FIN Scan
+alert tcp any any -> any any (flags:F; msg:"Nmap FIN Scan Detected"; sid:2000005; rev:1;)
+#NULL Scan
+#alert tcp any any -> any any (flags:; msg:"Nmap NULL Scan"; sid:2000006; rev:1;)
+#XMAS Scan
+alert tcp any any -> any any (flags:FPU; msg:"Nmap XMAS Scan"; sid:2000007; rev:1;)
+#UDP Port Scan
+alert udp any any -> any any (msg:"UDP Port Scan"; sid:2000008; rev:1;)
+#HTTP Recon + Attacks
+alert tcp any any -> any 80 (msg:"HTTP Traffic"; sid:2000009; rev:1;)
+#Detect directory traversal
+alert tcp any any -> any 80 (msg:"Directory Traversal"; content:"../"; sid:2000010; rev:1;)
+#Detect SQL Injection
+alert tcp any any -> any 80 (msg:"SQL Injection"; content:"' OR '1'='1"; nocase; sid:2000011; rev:1;)
+#Detect XSS 
+alert tcp any any -> any 80 (msg:"XSS Attack"; content:"<script>"; nocase; sid:2000012; rev:1;)
+#Reverse shells
+##Bash Reverse shells
+alert tcp any any -> any any (msg:"Bash Reverse Shell"; content:"bash -i"; sid:2000013; rev:1;)
+#Netcat Reverse shells
+alert tcp any any -> any any (msg:"Netcat RCE"; content:"nc -e"; sid:2000014; rev:1;)
+#Python Reverse shells
+alert tcp any any -> any any (msg:"Python Reverse Shell"; content:"python -c"; sid:2000015; rev:1;)
+#Malicious File Download (.exe)
+alert tcp any any -> any 80 (msg:"Suspicious EXE Download"; content:".exe"; nocase; sid:2000016; rev:1;)
+#Telnet Usage
+alert tcp any any -> any 23 (msg:"TELNET Connection"; sid:2000017; rev:1;)
+#SMB Access
+alert tcp any any -> any 445 (msg:"SMB Access"; sid:2000018; rev:1;)
+#Detect Kali Machine
+#alert ip 10.10.10.20 any -> any any (msg:"Kali Machine Traffic"); sid:2000019; rev:1;)
+
+#IPS
+drop tcp any any -> any 22 (msg:"SSH------ brute------- BLOCKED"; sid:2000020;)
+
+
